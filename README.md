@@ -38,7 +38,8 @@
         * if distance <= 100 
             * weapon.power -> m16Rifle > remingtonM24 > knife
 * **distance** (Euclidean distance)
-![](./euclideanDistance.png "Euclidean image")
+   * ![euclideanDistance](https://user-images.githubusercontent.com/62252282/126804920-b0573d11-842d-462c-b794-9373aea11a7e.png)
+
     
 ## API
 ##### public class PlayerStatus
