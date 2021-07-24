@@ -18,7 +18,7 @@
 
 ## Game rules
 * **energy** :
-    * *0 < energy < 100*
+    * *0 <= energy <= 100*
     * *if energy == 0*
         * lives -= 1
         * energy = 100
