@@ -9,7 +9,7 @@ package Player;
 public class Weapon {
 	private String name;
 	private int price;
-	
+	private double damage;
 	public Weapon() {
 		
 	}
@@ -19,10 +19,20 @@ public class Weapon {
 	 * @param name
 	 * @param price
 	 */
-	public Weapon(String name, int price) {
-		super();
+	public Weapon(String name, int price, double damage) {
 		this.name = name;
 		this.price = price;
+		this.damage = damage;
+	}
+
+
+	public double getDamage() {
+		return damage;
+	}
+
+
+	public void setDamage(double damage) {
+		this.damage = damage;
 	}
 
 
