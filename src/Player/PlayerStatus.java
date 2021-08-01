@@ -19,13 +19,13 @@ public class PlayerStatus {
 	private String nickname;
 	private int score;
 	private int lives;
-	private int health = 100;
+	private double health = 100;
 	private Weapon weaponInHand;
 	private double positionX;
 	private double positionY;
-	private Weapon knife = new Weapon("knife", 1000);
-	private Weapon sniper = new Weapon("sniper", 10000);
-	private Weapon kalashnikov = new Weapon("kalashnikov", 20000);
+	private Weapon knife = new Weapon("knife", 1000, 10);
+	private Weapon sniper = new Weapon("sniper", 10000, 65);
+	private Weapon kalashnikov = new Weapon("kalashnikov", 20000, 40);
 
 	/*****************************************/
 	/********** Instance variables ************/
@@ -49,25 +49,24 @@ public class PlayerStatus {
 	/********************** Constructors ******************/
 	/****************************************************/
 
-	public PlayerStatus() {
+	public PlayerStatus(String nickname, int lives, int score) {
+		this.nickname = nickname;
+		this.lives = lives;
+		this.score = score;
+		/*
+		 * Player will start the game from a pseudo random position with knife as
+		 * default weapon
+		 */
 		setWeaponList(knife, sniper, kalashnikov);
 		setInitPosition();
-
-	}
-
-	public PlayerStatus(String nickname) {
-		this();
-		this.nickname = nickname;
 	}
 
 	public PlayerStatus(String nickname, int lives) {
-		this(nickname);
-		this.lives = lives;
+		this(nickname, lives, 0);
 	}
 
-	public PlayerStatus(String nickname, int lives, int score) {
-		this(nickname, lives);
-		this.score = score;
+	public PlayerStatus(String nickname) {
+		this(nickname, 0, 0);
 	}
 
 	/****************************************************/
@@ -76,7 +75,7 @@ public class PlayerStatus {
 	/*
 	 * 
 	 */
-	/********************** Getters + Setters ******************/
+	/********************** Getters + Setters( ******************/
 	/********************************************************/
 	public double getPositionX() {
 		return positionX;
@@ -106,7 +105,7 @@ public class PlayerStatus {
 		this.lives = lives;
 	}
 
-	public void setHealth(int health) {
+	public void setHealth(double health) {
 		this.health = health;
 	}
 
@@ -118,7 +117,7 @@ public class PlayerStatus {
 		return lives;
 	}
 
-	public int getHealth() {
+	public double getHealth() {
 		return health;
 	}
 
@@ -139,7 +138,8 @@ public class PlayerStatus {
 		setPositionX((Math.random() * (mapDimX - 0)) + 0);
 		setPositionY((Math.random() * (mapDimY - 0)) + 0);
 	}
-	/*distanceBetweenPlayers should be private */
+
+	/* distanceBetweenPlayers should be private */
 	public double distanceBetweenPlayers(PlayerStatus opponent) {
 
 		return Math.sqrt(Math.pow((getPositionX() - opponent.getPositionX()), 2)
@@ -166,16 +166,6 @@ public class PlayerStatus {
 		lives += x;
 		if (lives == 0) {
 			System.out.println("GAME OVER");
-		}
-	}
-
-	private void healthUpdate(int x) {
-		health += x;
-		if (health > 100)
-			health = 100;
-		if (health < 0) {
-			livesUpdate(-1);
-			health = 100;
 		}
 	}
 
@@ -240,12 +230,94 @@ public class PlayerStatus {
 	/********************** Public functions ****************/
 	/*******************************************************/
 
+	public void healthUpdate(double x) {
+		health += x;
+		if (health > 100)
+			health = 100;
+		if (health < 0) {
+			livesUpdate(-1);
+			health = 100;
+		}
+	}
+
+	public void attackEnemy(PlayerStatus opponent) {
+		if (getWeaponInHand().getName().equals(opponent.getWeaponInHand().getName())) {
+			double generatedDagamge = (3 * getHealth() + getScore() / 1000) / 4;
+			double receivedDamage = (3 * opponent.getHealth() + opponent.getScore() / 1000) / 4;
+			/*
+			 * 1st case if aggressor generates more damage then defender defender health -=
+			 * generatedDamage; 1.1 if receivedDamage / generatedDagamge >= 0.5 aggressor
+			 * health -= receivedDamage * 0.35; 1.2 if receivedDamage / generatedDagamge <
+			 * 0.5 aggressor health -= receivedDamage * 0.035;
+			 */
+			if (generatedDagamge > receivedDamage) {
+				if (receivedDamage / generatedDagamge >= 0.5) {
+					opponent.healthUpdate(-generatedDagamge);
+					healthUpdate(-receivedDamage * 0.35);
+				} else {
+					opponent.healthUpdate(-generatedDagamge);
+					healthUpdate(-receivedDamage * 0.035);
+				}
+			}
+			/*
+			 * 2nd case if defender generates more damage then aggressor health -=
+			 * receivedDamage; 2.1 if generatedDagamge / receivedDamage >= 0.5 defender
+			 * health -= generatedDagamge * 0.35; 2.2 if generatedDagamge / receivedDamage <
+			 * 0.5 defender health -= generatedDagamge * 0.035;
+			 * 
+			 *
+			 */
+			else if (generatedDagamge < receivedDamage) {
+				if (generatedDagamge / receivedDamage >= 0.5) {
+					healthUpdate(-receivedDamage);
+					opponent.healthUpdate(-generatedDagamge * 0.35);
+				} else {
+					healthUpdate(-receivedDamage);
+					opponent.healthUpdate(-generatedDagamge * 0.035);
+				}
+			}
+		} else if (!getWeaponInHand().getName().equals(opponent.getWeaponInHand().getName())) {
+			if (distanceBetweenPlayers(opponent) > 1000) {
+				double generatedDagamge = (1.5 * getHealth() + getWeaponInHand().getDamage() * 0.3
+						+ distanceBetweenPlayers(opponent) / 100) / 4;
+				double receivedDamage = (1.5 * opponent.getHealth() + opponent.getWeaponInHand().getDamage() * 0.3
+						+ distanceBetweenPlayers(opponent) / 100) / 4;
+
+				/***** test ******/
+				System.out.println("distance > 1000");
+				System.out.println("generated Damage : " + generatedDagamge);
+				System.out.println("received Damage : " + receivedDamage);
+				/***** test ******/
+				opponent.healthUpdate(-generatedDagamge);
+				healthUpdate(-receivedDamage);
+			} else if (distanceBetweenPlayers(opponent) <= 1000) {
+				// if distance is less/equal then/to 1000, kalash damage is updated to
+				// 40 / 0.57 = 70.17; sniper damage is updated to 65 * 0.62= 40.3
+				kalashnikov.setDamage(kalashnikov.getDamage() / 0.57);
+				sniper.setDamage(sniper.getDamage() * 0.62);
+
+				double generatedDagamge = (1.5 * getHealth() + getWeaponInHand().getDamage() * 0.3
+						+ distanceBetweenPlayers(opponent) / 100) / 4;
+				double receivedDamage = (1.5 * opponent.getHealth() + opponent.getWeaponInHand().getDamage() * 0.3
+						+ distanceBetweenPlayers(opponent) / 100) / 4;
+				/***** test ******/
+				System.out.println("distance <= 1000");
+				System.out.println("generated Damage : " + generatedDagamge);
+				System.out.println("received Damage : " + receivedDamage);
+				/***** test ******/
+				opponent.healthUpdate(-generatedDagamge);
+				healthUpdate(-receivedDamage);
+			}
+
+		}
+	}
+
 	public boolean shouldAttackOpponent(PlayerStatus opponent) {
 		boolean attack = true;
 		if (getWeaponInHand().getName().equals(opponent.getWeaponInHand().getName())) {
-			double assault = (3 * getHealth() + getScore() / 1000) / 4;
-			double retreat = (3 * opponent.getHealth() + opponent.getScore() / 1000) / 4;
-			if (retreat > assault)
+			double generatedDagamge = (3 * getHealth() + getScore() / 1000) / 4;
+			double reveivedDamage = (3 * opponent.getHealth() + opponent.getScore() / 1000) / 4;
+			if (reveivedDamage > generatedDagamge)
 				attack = false;
 		} else if (!getWeaponInHand().getName().equals(opponent.getWeaponInHand().getName())) {
 			if (distanceBetweenPlayers(opponent) > 1000) {
@@ -309,6 +381,13 @@ public class PlayerStatus {
 			System.out.println("Increase the score\nYou need " + weaponList.get(weaponID).getPrice() + " points for "
 					+ weaponList.get(weaponID).getName());
 		return set;
+	}
+
+	@Override
+	public String toString() {
+		return "PlayerStatus [nickname=" + nickname + ", score=" + score + ", lives=" + lives + ", health=" + health
+				+ ", weaponInHand=" + weaponInHand.getName() + ", positionX=" + positionX + ", positionY=" + positionY
+				+ "]";
 	}
 
 	/*********************************************************/
