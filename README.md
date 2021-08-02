@@ -38,7 +38,7 @@
         * if distance <= 100 
             * weapon.power -> m16Rifle > remingtonM24 > knife
 * **distance** (Euclidean distance)
-    * ### insert an image of euclidean distance 
+![plot](/media/cen7/fa40c342-934f-41b9-a448-4dded7175633/ComputerNetworking/JAVA/DevMindJavaBegginer/PlayerStatus/euclideanDistance.png "Euclidean image")
     
 ## API
 ##### public class PlayerStatus
