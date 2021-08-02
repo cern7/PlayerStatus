@@ -53,10 +53,7 @@ public class PlayerStatus {
 		this.nickname = nickname;
 		this.lives = lives;
 		this.score = score;
-		/*
-		 * Player will start the game from a pseudo random position with knife as
-		 * default weapon
-		 */
+		
 		setWeaponList(knife, sniper, kalashnikov);
 		setInitPosition();
 	}
