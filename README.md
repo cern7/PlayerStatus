@@ -45,20 +45,20 @@
 ## API
 ##### public class PlayerStatus
 ## 
-	 PlayerStatus(String nickname)                       // Initializing the player object with score = 0 and lives =0
-    	PlayerStatus(String nickname, int lives)            // Initializing the player object with score = 0
-    	PlayerStatus(String nickname, int lives, int score) // Initializing the player object with all three fields, creating the weapon list, and get a random position for player
+	PlayerStatus(String nickname)                       // Initializing the player object with score = 0 and lives =0
+	PlayerStatus(String nickname, int lives)            // Initializing the player object with score = 0
+	PlayerStatus(String nickname, int lives, int score) // Initializing the player object with all three fields, creating the weapon list, and get a random position for player
 	double getPositionX()                              // return the player oX position
-   	double getPositionY()                              // return the player oY position
-    	String getNickname()                               // return the player Nickname
-    	static String getGameName()                        // return the game name
-   	void setScore(int score)                           // set the player score
+	double getPositionY()                              // return the player oY position
+	String getNickname()                               // return the player Nickname
+	String getGameName()                        // return the game name
+	void setScore(int score)                           // set the player score
    	void setLives(int lives)                           // set the player lives
-    	void setEnergy(int energy)                         // set the player energy
-    	int getScore()                                     // return the player score
-    	int getLives()                                     // return the player lives
-    	int getEnergy()                                    // return the player energy
-    	Weapon getWeaponInHand()                           // return the player weapon
+	void setEnergy(int energy)                         // set the player energy
+	int getScore()                                     // return the player score
+	int getLives()                                     // return the player lives
+	int getEnergy()                                    // return the player energy
+	Weapon getWeaponInHand()                           // return the player weapon
 	void attackEnemy(PlayerStatus opponent)		   // attacking the opponent
 	boolean shouldAttackOpponent(PlayerStatus opponent)// attacking advice
 	void movePlayerTo(double positionX, double positionY)	// moving the player
