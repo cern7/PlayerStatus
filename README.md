@@ -40,10 +40,7 @@
         * if distance <= 100 
             * weapon.power -> m16Rifle > remingtonM24 > knife
 * **distance** (Euclidean distance)
-
-> $$ d(p,q) = \sqrt{(q_1-p_1)^2 + (q_2 - p_2)^2} $$
-
-
+![euclideanDistance](https://user-images.githubusercontent.com/62252282/127844982-7eceb6fd-451b-4e15-bb1e-624d5050f0fa.png)
 
 
 ## API
